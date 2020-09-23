@@ -1,0 +1,5 @@
+mutation UpdatePart($id: String!, $input: UpdatePartInput!) {
+  updatePart(id: $id, input: $input) {
+    ...RegularPartResponse
+  }
+}

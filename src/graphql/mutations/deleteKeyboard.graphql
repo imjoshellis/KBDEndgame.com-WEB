@@ -1,0 +1,3 @@
+mutation DeleteKeybard($id: String!) {
+  deleteKeyboard(id: $id)
+}

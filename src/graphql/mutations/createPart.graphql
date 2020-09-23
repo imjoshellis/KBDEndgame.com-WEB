@@ -1,0 +1,5 @@
+mutation CreatePart($keyboardId: String!, $input: NewPartInput!) {
+  createPart(keyboardId: $keyboardId, input: $input) {
+    ...RegularPartResponse
+  }
+}

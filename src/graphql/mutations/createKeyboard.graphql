@@ -1,0 +1,5 @@
+mutation CreateKeyboard($input: NewKeyboardInput!) {
+  createKeyboard(input: $input) {
+    ...SimpleKeyboardResponse
+  }
+}

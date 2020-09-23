@@ -1,0 +1,14 @@
+fragment RegularKeyboard on Keyboard {
+  id
+  title
+  description
+  image
+  createdAt
+  updatedAt
+  user {
+    ...RegularUser
+  }
+  parts {
+    ...RegularPart
+  }
+}

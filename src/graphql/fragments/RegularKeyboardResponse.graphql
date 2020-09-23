@@ -1,0 +1,8 @@
+fragment RegularKeyboardResponse on KeyboardResponse {
+  errors {
+    ...RegularError
+  }
+  keyboard {
+    ...RegularKeyboard
+  }
+}

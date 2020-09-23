@@ -1,0 +1,3 @@
+mutation DeletePart($id: String!) {
+  deletePart(id: $id)
+}

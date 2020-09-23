@@ -1,0 +1,8 @@
+fragment RegularPartResponse on PartResponse {
+  errors {
+    ...RegularError
+  }
+  part {
+    ...RegularPart
+  }
+}

@@ -1,0 +1,5 @@
+query Keyboards {
+  keyboards {
+    ...RegularKeyboard
+  }
+}

@@ -1,0 +1,5 @@
+mutation UpdateKeyboard($id: String!, $input: UpdateKeyboardInput!) {
+  updateKeyboard(id: $id, input: $input) {
+    ...SimpleKeyboardResponse
+  }
+}

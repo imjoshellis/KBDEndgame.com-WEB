@@ -1,0 +1,8 @@
+fragment RegularPart on Part {
+  id
+  title
+  url
+  price
+  createdAt
+  updatedAt
+}

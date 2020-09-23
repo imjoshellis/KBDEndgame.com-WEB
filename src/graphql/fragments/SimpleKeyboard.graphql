@@ -1,0 +1,8 @@
+fragment SimpleKeyboard on Keyboard {
+  id
+  title
+  description
+  image
+  createdAt
+  updatedAt
+}

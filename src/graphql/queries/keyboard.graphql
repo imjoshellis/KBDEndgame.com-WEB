@@ -1,0 +1,5 @@
+query Keyboard($id: String!) {
+  keyboard(id: $id) {
+    ...RegularKeyboard
+  }
+}
