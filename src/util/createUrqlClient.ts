@@ -5,7 +5,10 @@ import { LogoutMutation, MeDocument, MeQuery } from '../generated/graphql'
 import { betterUpdateQuery } from './betterUpdateQuery'
 
 export const createUrqlClient = (ssrExchange: any) => ({
-  url: 'http://localhost:4000/graphql',
+  url:
+    process.env.NODE_ENV === 'production'
+      ? 'https://kbdendgame.herokuapp.com/graphql'
+      : 'http://localhost:4000/graphql',
   fetchOptions: {
     credentials: 'include' as const
   },
