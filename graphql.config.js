@@ -1,5 +1,5 @@
 // graphql.config.js
 module.exports = {
-  schema: 'http://localhost:4000/graphql',
+  schema: process.env.NEXT_PUBLIC_API_URL,
   documents: ['**/*.{graphql,js,ts,jsx,tsx}']
 }

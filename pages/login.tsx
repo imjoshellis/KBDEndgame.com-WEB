@@ -80,13 +80,13 @@ export const Login: React.FC = () => {
           </p>
           <div className='grid grid-cols-1 gap-2 md:grid-cols-2'>
             <a
-              href='http://localhost:4000/auth/github'
+              href={process.env.NEXT_PUBLIC_API_BASE_URL + 'auth/github'}
               className='flex justify-center p-2 px-4 text-sm font-medium tracking-wider uppercase transition-colors duration-200 ease-out rounded bg-surface-700 hover:bg-surface-600 hover:ease-in hover:text-surface-50 hover:no-underline'
             >
               Login with GitHub
             </a>
             <a
-              href='http://localhost:4000/auth/google'
+              href={process.env.NEXT_PUBLIC_API_BASE_URL + 'auth/google'}
               className='flex justify-center p-2 px-4 text-sm font-medium tracking-wider uppercase transition-colors duration-200 ease-out rounded bg-surface-700 hover:bg-surface-600 hover:ease-in hover:text-surface-50 hover:no-underline'
             >
               Login with Google
