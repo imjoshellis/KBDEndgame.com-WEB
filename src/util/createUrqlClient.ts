@@ -5,7 +5,7 @@ import { LogoutMutation, MeDocument, MeQuery } from '../generated/graphql'
 import { betterUpdateQuery } from './betterUpdateQuery'
 
 export const createUrqlClient = (ssrExchange: any) => ({
-  url: process.env.API_URL,
+  url: process.env.NEXT_PUBLIC_API_URL as string,
   fetchOptions: {
     credentials: 'include' as const
   },
