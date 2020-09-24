@@ -31,7 +31,8 @@ yarn-error.log*
 .env.production.local
 
 # vercel
-.vercel
+out_functions/
+out_publish/
 
 # Tailwind Generated Styles
 globals.css
