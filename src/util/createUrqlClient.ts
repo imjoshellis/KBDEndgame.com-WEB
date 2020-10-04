@@ -7,7 +7,7 @@ import { SubscriptionClient } from 'subscriptions-transport-ws'
 import { isServer } from './isServer'
 
 const subscriptionClient = !isServer()
-  ? new SubscriptionClient('ws://localhost:4000/graphql', {
+  ? new SubscriptionClient(process.env.NEXT_PUBLIC_API_WEBSOCKET as string, {
       reconnect: true
     })
   : undefined
