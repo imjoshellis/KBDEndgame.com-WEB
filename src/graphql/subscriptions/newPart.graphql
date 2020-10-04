@@ -1,0 +1,5 @@
+subscription NewPart($keyboardId: String!) {
+	newPart(keyboardId: $keyboardId)  {
+		...RegularPartResponse
+	}
+}

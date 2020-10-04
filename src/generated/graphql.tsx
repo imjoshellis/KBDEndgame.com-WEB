@@ -192,17 +192,11 @@ export type UpdateUserInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  addedPart: PartResponse;
-  deletedPart: PartResponse;
+  newPart: PartResponse;
 };
 
 
-export type SubscriptionAddedPartArgs = {
-  keyboardId: Scalars['String'];
-};
-
-
-export type SubscriptionDeletedPartArgs = {
+export type SubscriptionNewPartArgs = {
   keyboardId: Scalars['String'];
 };
 
@@ -423,27 +417,14 @@ export type MeQuery = (
   )> }
 );
 
-export type AddedPartSubscriptionVariables = Exact<{
+export type NewPartSubscriptionVariables = Exact<{
   keyboardId: Scalars['String'];
 }>;
 
 
-export type AddedPartSubscription = (
+export type NewPartSubscription = (
   { __typename?: 'Subscription' }
-  & { addedPart: (
-    { __typename?: 'PartResponse' }
-    & RegularPartResponseFragment
-  ) }
-);
-
-export type DeletedPartSubscriptionVariables = Exact<{
-  keyboardId: Scalars['String'];
-}>;
-
-
-export type DeletedPartSubscription = (
-  { __typename?: 'Subscription' }
-  & { deletedPart: (
+  & { newPart: (
     { __typename?: 'PartResponse' }
     & RegularPartResponseFragment
   ) }
@@ -667,25 +648,14 @@ export const MeDocument = gql`
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 };
-export const AddedPartDocument = gql`
-    subscription AddedPart($keyboardId: String!) {
-  addedPart(keyboardId: $keyboardId) {
+export const NewPartDocument = gql`
+    subscription NewPart($keyboardId: String!) {
+  newPart(keyboardId: $keyboardId) {
     ...RegularPartResponse
   }
 }
     ${RegularPartResponseFragmentDoc}`;
 
-export function useAddedPartSubscription<TData = AddedPartSubscription>(options: Omit<Urql.UseSubscriptionArgs<AddedPartSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<AddedPartSubscription, TData>) {
-  return Urql.useSubscription<AddedPartSubscription, TData, AddedPartSubscriptionVariables>({ query: AddedPartDocument, ...options }, handler);
-};
-export const DeletedPartDocument = gql`
-    subscription DeletedPart($keyboardId: String!) {
-  deletedPart(keyboardId: $keyboardId) {
-    ...RegularPartResponse
-  }
-}
-    ${RegularPartResponseFragmentDoc}`;
-
-export function useDeletedPartSubscription<TData = DeletedPartSubscription>(options: Omit<Urql.UseSubscriptionArgs<DeletedPartSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<DeletedPartSubscription, TData>) {
-  return Urql.useSubscription<DeletedPartSubscription, TData, DeletedPartSubscriptionVariables>({ query: DeletedPartDocument, ...options }, handler);
+export function useNewPartSubscription<TData = NewPartSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewPartSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewPartSubscription, TData>) {
+  return Urql.useSubscription<NewPartSubscription, TData, NewPartSubscriptionVariables>({ query: NewPartDocument, ...options }, handler);
 };

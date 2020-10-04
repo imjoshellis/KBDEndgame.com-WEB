@@ -1,5 +1,0 @@
-subscription AddedPart($keyboardId: String!) {
-	addedPart(keyboardId: $keyboardId)  {
-		...RegularPartResponse
-	}
-}
