@@ -71,7 +71,6 @@ export const AddKeyboard: NextPage = () => {
                 })
               )
             } else {
-              console.log(response)
               setSuccess(true)
               const slug = slugid.encode(
                 response.data?.createKeyboard.keyboard!.id
