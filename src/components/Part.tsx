@@ -24,9 +24,10 @@ export const PartSchema = Yup.object().shape({
 interface PartProps {
   part: RegularPartFragment
   owner: boolean
+  getKeyboard: () => void
 }
 
-export const Part: React.FC<PartProps> = ({ part, owner }) => {
+export const Part: React.FC<PartProps> = ({ part, owner, getKeyboard }) => {
   const [hover, setHover] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [, deletePart] = useDeletePartMutation()
@@ -143,6 +144,7 @@ export const Part: React.FC<PartProps> = ({ part, owner }) => {
                     className='p-2 py-0 rounded bg-danger-500 hover:bg-danger-400'
                     onClick={async () => {
                       await deletePart({ id: part.id })
+                      getKeyboard()
                     }}
                   >
                     are you sure?
