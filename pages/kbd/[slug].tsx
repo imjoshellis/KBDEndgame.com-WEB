@@ -59,14 +59,9 @@ export const Keyboard: NextPage = () => {
 
   useEffect(() => {
     const deletedPart = deletedPartSubscription.data?.deletedPart.part
-    console.log(deletedPart)
     if (parts && deletedPart)
       setParts([...parts].filter(p => p.id !== deletedPart.id))
   }, [deletedPartSubscription])
-
-  useEffect(() => {
-    console.log(parts)
-  }, [parts])
 
   const [{ data, fetching }] = useKeyboardQuery({
     variables: { id: id as string },
@@ -85,17 +80,14 @@ export const Keyboard: NextPage = () => {
   const { user } = useAuth()
 
   useEffect(() => {
-    console.log('data use effect')
     if (data?.keyboard) setKeyboard(data?.keyboard)
   }, [data])
 
   useEffect(() => {
-    console.log('keyboard use effect')
     keyboard?.parts ? setParts(keyboard?.parts) : null
   }, [keyboard])
 
   useEffect(() => {
-    console.log('newest part use effect')
     if (!newestPart) return
     if (!parts) {
       setParts([newestPart])
