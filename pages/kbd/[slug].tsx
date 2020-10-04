@@ -11,9 +11,13 @@ import Part from '../../src/components/Part'
 import { useAuth } from '../../src/context/auth/AuthProvider'
 import {
   NewPartInput,
+  RegularKeyboardFragment,
+  RegularPartFragment,
   useCreatePartMutation,
   useDeleteKeybardMutation,
-  useKeyboardQuery
+  useKeyboardQuery,
+  useAddedPartSubscription,
+  useDeletedPartSubscription
 } from '../../src/generated/graphql'
 import RegularPageLayout from '../../src/layouts/RegularPageLayout'
 import { FormErrors } from '../../src/types/FormErrors'
@@ -23,6 +27,7 @@ import { handleErrors } from '../../src/util/handleErrors'
 import * as Yup from 'yup'
 import { formatDistanceToNow, toDate } from 'date-fns'
 import Head from 'next/head'
+import { isServer } from '../../src/util/isServer'
 
 export const PartSchema = Yup.object().shape({
   title: Yup.string()
@@ -36,9 +41,36 @@ export const Keyboard: NextPage = () => {
   const router = useRouter()
   const [id, setId] = useState<string | null>()
   const [slug, setSlug] = useState('')
-  const [{ data, fetching }, getKeyboard] = useKeyboardQuery({
+  const [parts, setParts] = useState<RegularPartFragment[] | null>(null)
+  const [addedPartSubscription] = useAddedPartSubscription({
+    variables: { keyboardId: id as string },
+    pause: !id || isServer()
+  })
+  const [deletedPartSubscription] = useDeletedPartSubscription({
+    variables: { keyboardId: id as string },
+    pause: !id || isServer()
+  })
+  const [newestPart, setNewestPart] = useState<RegularPartFragment | null>(null)
+
+  useEffect(() => {
+    if (addedPartSubscription.data?.addedPart.part)
+      setNewestPart(addedPartSubscription.data?.addedPart.part)
+  }, [addedPartSubscription])
+
+  useEffect(() => {
+    const deletedPart = deletedPartSubscription.data?.deletedPart.part
+    console.log(deletedPart)
+    if (parts && deletedPart)
+      setParts([...parts].filter(p => p.id !== deletedPart.id))
+  }, [deletedPartSubscription])
+
+  useEffect(() => {
+    console.log(parts)
+  }, [parts])
+
+  const [{ data, fetching }] = useKeyboardQuery({
     variables: { id: id as string },
-    pause: !id,
+    pause: !id || isServer(),
     requestPolicy: 'cache-and-network'
   })
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -48,9 +80,31 @@ export const Keyboard: NextPage = () => {
   const [success, setSuccess] = useState(false)
   const [serverErrors, setServerErrors] = useState<FormErrors>({})
   const [, createPart] = useCreatePartMutation()
+  const [keyboard, setKeyboard] = useState<RegularKeyboardFragment | null>(null)
 
-  const keyboard = data?.keyboard
   const { user } = useAuth()
+
+  useEffect(() => {
+    console.log('data use effect')
+    if (data?.keyboard) setKeyboard(data?.keyboard)
+  }, [data])
+
+  useEffect(() => {
+    console.log('keyboard use effect')
+    keyboard?.parts ? setParts(keyboard?.parts) : null
+  }, [keyboard])
+
+  useEffect(() => {
+    console.log('newest part use effect')
+    if (!newestPart) return
+    if (!parts) {
+      setParts([newestPart])
+    } else {
+      parts.filter(p => p.id === newestPart.id).length === 0
+        ? setParts([...parts, newestPart])
+        : null
+    }
+  }, [newestPart])
 
   const relativeUpdatedAt = keyboard
     ? formatDistanceToNow(toDate(parseInt(keyboard.updatedAt)))
@@ -144,11 +198,10 @@ export const Keyboard: NextPage = () => {
           </div>
           <div className='flex flex-col gap-2 p-4 mb-2 overflow-hidden border-2 rounded flex-cols border-surface-700 bg-surface-800'>
             <h3 className='text-xl font-medium'>Parts</h3>
-            {keyboard.parts && keyboard.parts.length > 0 ? (
-              keyboard.parts.map(part => (
+            {parts && parts.length > 0 ? (
+              parts.map(part => (
                 <Part
                   key={part.id}
-                  getKeyboard={getKeyboard}
                   part={part}
                   owner={user ? user.id === keyboard.user.id : false}
                 />
@@ -187,7 +240,6 @@ export const Keyboard: NextPage = () => {
                     })
                   )
                 } else {
-                  getKeyboard()
                   setSuccess(true)
                   setTimeout(() => resetForm({}), 1000)
                 }
@@ -250,4 +302,4 @@ export const Keyboard: NextPage = () => {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Keyboard)
+export default withUrqlClient(createUrqlClient)(Keyboard)

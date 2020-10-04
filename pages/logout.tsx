@@ -16,4 +16,4 @@ export const Logout: NextPage<any> = ({ resetUrqlClient }) => {
   return <div>Logging out... Please wait.</div>
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Logout)
+export default withUrqlClient(createUrqlClient)(Logout)

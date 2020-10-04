@@ -45,12 +45,12 @@ export type QueryUserArgs = {
 
 export type Keyboard = {
   __typename?: 'Keyboard';
+  id: Scalars['String'];
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  id: Scalars['String'];
   userId: Scalars['String'];
   user: User;
   parts?: Maybe<Array<Part>>;
@@ -68,12 +68,12 @@ export type User = {
 
 export type Part = {
   __typename?: 'Part';
+  id: Scalars['String'];
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  id: Scalars['String'];
   url?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Float']>;
   keyboardId: Scalars['String'];
@@ -188,6 +188,22 @@ export type UpdateUserInput = {
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  addedPart: PartResponse;
+  deletedPart: PartResponse;
+};
+
+
+export type SubscriptionAddedPartArgs = {
+  keyboardId: Scalars['String'];
+};
+
+
+export type SubscriptionDeletedPartArgs = {
+  keyboardId: Scalars['String'];
 };
 
 export type RegularErrorFragment = (
@@ -407,6 +423,32 @@ export type MeQuery = (
   )> }
 );
 
+export type AddedPartSubscriptionVariables = Exact<{
+  keyboardId: Scalars['String'];
+}>;
+
+
+export type AddedPartSubscription = (
+  { __typename?: 'Subscription' }
+  & { addedPart: (
+    { __typename?: 'PartResponse' }
+    & RegularPartResponseFragment
+  ) }
+);
+
+export type DeletedPartSubscriptionVariables = Exact<{
+  keyboardId: Scalars['String'];
+}>;
+
+
+export type DeletedPartSubscription = (
+  { __typename?: 'Subscription' }
+  & { deletedPart: (
+    { __typename?: 'PartResponse' }
+    & RegularPartResponseFragment
+  ) }
+);
+
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -624,4 +666,26 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const AddedPartDocument = gql`
+    subscription AddedPart($keyboardId: String!) {
+  addedPart(keyboardId: $keyboardId) {
+    ...RegularPartResponse
+  }
+}
+    ${RegularPartResponseFragmentDoc}`;
+
+export function useAddedPartSubscription<TData = AddedPartSubscription>(options: Omit<Urql.UseSubscriptionArgs<AddedPartSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<AddedPartSubscription, TData>) {
+  return Urql.useSubscription<AddedPartSubscription, TData, AddedPartSubscriptionVariables>({ query: AddedPartDocument, ...options }, handler);
+};
+export const DeletedPartDocument = gql`
+    subscription DeletedPart($keyboardId: String!) {
+  deletedPart(keyboardId: $keyboardId) {
+    ...RegularPartResponse
+  }
+}
+    ${RegularPartResponseFragmentDoc}`;
+
+export function useDeletedPartSubscription<TData = DeletedPartSubscription>(options: Omit<Urql.UseSubscriptionArgs<DeletedPartSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<DeletedPartSubscription, TData>) {
+  return Urql.useSubscription<DeletedPartSubscription, TData, DeletedPartSubscriptionVariables>({ query: DeletedPartDocument, ...options }, handler);
 };
