@@ -82,4 +82,4 @@ export const AllKeyboards: NextPage = () => {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(AllKeyboards)
+export default withUrqlClient(createUrqlClient)(AllKeyboards)
