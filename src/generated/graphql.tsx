@@ -45,12 +45,12 @@ export type QueryUserArgs = {
 
 export type Keyboard = {
   __typename?: 'Keyboard';
+  id: Scalars['String'];
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  id: Scalars['String'];
   userId: Scalars['String'];
   user: User;
   parts?: Maybe<Array<Part>>;
@@ -68,12 +68,12 @@ export type User = {
 
 export type Part = {
   __typename?: 'Part';
+  id: Scalars['String'];
   title: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  id: Scalars['String'];
   url?: Maybe<Scalars['String']>;
   price?: Maybe<Scalars['Float']>;
   keyboardId: Scalars['String'];
@@ -188,6 +188,16 @@ export type UpdateUserInput = {
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+};
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  newPart: PartResponse;
+};
+
+
+export type SubscriptionNewPartArgs = {
+  keyboardId: Scalars['String'];
 };
 
 export type RegularErrorFragment = (
@@ -407,6 +417,19 @@ export type MeQuery = (
   )> }
 );
 
+export type NewPartSubscriptionVariables = Exact<{
+  keyboardId: Scalars['String'];
+}>;
+
+
+export type NewPartSubscription = (
+  { __typename?: 'Subscription' }
+  & { newPart: (
+    { __typename?: 'PartResponse' }
+    & RegularPartResponseFragment
+  ) }
+);
+
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -624,4 +647,15 @@ export const MeDocument = gql`
 
 export function useMeQuery(options: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+};
+export const NewPartDocument = gql`
+    subscription NewPart($keyboardId: String!) {
+  newPart(keyboardId: $keyboardId) {
+    ...RegularPartResponse
+  }
+}
+    ${RegularPartResponseFragmentDoc}`;
+
+export function useNewPartSubscription<TData = NewPartSubscription>(options: Omit<Urql.UseSubscriptionArgs<NewPartSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandler<NewPartSubscription, TData>) {
+  return Urql.useSubscription<NewPartSubscription, TData, NewPartSubscriptionVariables>({ query: NewPartDocument, ...options }, handler);
 };
