@@ -16,7 +16,8 @@ import {
   useCreatePartMutation,
   useDeleteKeybardMutation,
   useKeyboardQuery,
-  useNewPartSubscription
+  useAddedPartSubscription,
+  useDeletedPartSubscription
 } from '../../src/generated/graphql'
 import RegularPageLayout from '../../src/layouts/RegularPageLayout'
 import { FormErrors } from '../../src/types/FormErrors'
@@ -41,19 +42,36 @@ export const Keyboard: NextPage = () => {
   const [id, setId] = useState<string | null>()
   const [slug, setSlug] = useState('')
   const [parts, setParts] = useState<RegularPartFragment[] | null>(null)
-  const [newPart] = useNewPartSubscription({
+  const [addedPartSubscription] = useAddedPartSubscription({
+    variables: { keyboardId: id as string },
+    pause: !id || isServer()
+  })
+  const [deletedPartSubscription] = useDeletedPartSubscription({
     variables: { keyboardId: id as string },
     pause: !id || isServer()
   })
   const [newestPart, setNewestPart] = useState<RegularPartFragment | null>(null)
 
   useEffect(() => {
-    if (newPart.data?.newPart.part) setNewestPart(newPart.data?.newPart.part)
-  }, [newPart])
+    if (addedPartSubscription.data?.addedPart.part)
+      setNewestPart(addedPartSubscription.data?.addedPart.part)
+  }, [addedPartSubscription])
+
+  useEffect(() => {
+    const deletedPart = deletedPartSubscription.data?.deletedPart.part
+    console.log(deletedPart)
+    if (parts && deletedPart)
+      setParts([...parts].filter(p => p.id !== deletedPart.id))
+  }, [deletedPartSubscription])
+
+  useEffect(() => {
+    console.log(parts)
+  }, [parts])
 
   const [{ data, fetching }] = useKeyboardQuery({
     variables: { id: id as string },
-    pause: !id || isServer()
+    pause: !id || isServer(),
+    requestPolicy: 'cache-and-network'
   })
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [, deleteKeyboard] = useDeleteKeybardMutation()
@@ -85,7 +103,6 @@ export const Keyboard: NextPage = () => {
       parts.filter(p => p.id === newestPart.id).length === 0
         ? setParts([...parts, newestPart])
         : null
-      console.log(parts)
     }
   }, [newestPart])
 

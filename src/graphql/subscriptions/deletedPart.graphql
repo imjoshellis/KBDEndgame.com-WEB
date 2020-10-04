@@ -1,0 +1,5 @@
+subscription DeletedPart($keyboardId: String!) {
+	deletedPart(keyboardId: $keyboardId)  {
+		...RegularPartResponse
+	}
+}
